@@ -1,0 +1,57 @@
+<!Doctype html>
+<html lang="en">
+	<head>
+		<title>Progressive Web App Payments</title>
+		<link rel="icon" href="phoneicon.png" type="image/png">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="pwastyle.css" rel="stylesheet">
+	</head>
+
+	<nav>
+		<ul>
+			<li><span id="techcrit"><a href="techcrit.html">Technical Criteria</a></span></li>
+			<li><a href="serviceworker.html">Service Workers</a></li>
+			<li><a href="payments.html">Payments</a></li>
+			<li><a href="contact.html">Contact</a></li>
+		</ul>
+	</nav>
+	<header>
+		<h1><a href="index.html">Progressive Web Applications</a></h1>
+	</header>
+
+	<body>
+		<div id="wrapper">
+			<div class="parallax">
+			</div>
+
+			<main>
+				<img src="images/Progressive_Web_Apps_Logo.png" alt="a picture of the progressive web app logo"><br>
+				<caption>Progressive Web App logo</caption>
+				<h2>What are they?</h2>
+				Progressive web apps are applications that are able to function similar to native device applications. What makes them progressive is their ability to add functionality based on the user's interaction. They can behave like a normal web applications but also like a native application when they are installed on the device. The ability to install the app makes it possible for it to function offline and access hardware features. PWAs are able to function off of a single codebase rather than having to write the app in device specific code. The concept is to make having an app function seemlessly across different devices and environments with varying degrees of functionality.
+				<h2>Who can use them?</h2>
+				<p>Currently chromium based web browsers (Chrome, Edge, Brave, Opera, etc.) are the only ones that universally support PWAs. Firefox doesn't and Safari has only partial support. The beauty of the PWA design, however, is that the apps can still be used by people without the full browser support. The progressive nature of the application means that it will still function without the full native browser support. However, what this does mean is that because there isn't full support the full functionality of the app won't be able to be utilized by the end user. This can mean things like having service workers that cache resources locally may not work for other browsers so the offline functionality may be lacking and require a connection to the internet to function. As part of the PWA specification they are to be designed to have offline pages rather than just breaking like a normal web page even if it is just a landing page that notifies the user of their connection status.</p>
+				<h2>How do they work?</h2>
+				<p>PWAs work by using the tools of the web. Primarily HTML, CSS, and Javascript are used for front end resources and the back end code can be written on any server-side language of your choice. They are distributed to users by using a web server. Each PWA requires a JSON manifest file to describe the application to the host operating system. The manifest file contains metadata about the app such as name, description, icons, and os features it uses. PWAs are also required to be published on HTTPS making it more secure. PWAs also utilize service workers which make the PWA fast and work independently of network conditions. Ideally the application would be installed on to the device it is being used on. This would allow for more native device features and help when the application is offline. When the device is offline then it relies on the service workers to provide resources needed instead of retrieving them from the server.
+				</p>
+				<h2>Are they the future?</h2>
+				<p> The concept of the Progressive Web App has been around since 2015 when it was introduced by Google engineers Alex Russell and designer Frances Berriman. Google formally introduced PWAs during the 2016 Google IO conference.<sup>1</sup> To say they are the future misses the point which is that they are the present at this point. It is technology that already exists and is being used "in the wild". Some notable examples are Starbucks, Trivago, and Tinder.<sup>2</sup> What remains to be seen, however, is broader support across the modern browser landscape.
+				</p>
+				<h2>When to create a PWA vs a native app?</h2>
+				<p> Since the cost of developement time is reduced by only having a singular code base developing a PWA is a good alternative to consider when on a constrained budget. This would cut the cost of development time and the need to write potentially multiple versions of the application. Another factor to consider is how much native hardware support would be needed for the app to function. If the app can function without hardware features that native apps have like: proximity sensors, health sensors, background bluetooth, file system access (iOS), GPS tracking when the app is closed, access to phone dialing or sms, contacts, or installed app list, touch or face ID, run in the background, then a PWA may be the right fit instead of a native app. However, PWAs can access the camera and microphone, geolocation, accelerometer, NFC, vibration, USB, and clipboard. PWAs also allow for push notifications, home screen installation, background sync (limited), and responsive design. Like any engineering task it comes down to the costs and benefits of a given solution.<br>
+
+				Another benefit of having a Progressive Web App is that it can be discoverable by search engines which native apps aren't considered in the same context as a normal website. PWAs also boast impressive statistics for user engagement. PWAs have a 146% higher click through rate on ad campaigns compared to normal websites.<sup>3</sup> They use 60% less data compared to native apps. PWAs have a 20% increase in time spent and product browsing compared to mobile websites. They reduce shopping cart abandoment by up to 35%. So the construct of a PWA vs a mobile app may not be the right question but rather having a PWA vs a standard mobile website. Some companies, notably Starbucks and Twitter, have not only a native mobile app but also a PWA. So the option for some situations may not be one or another but both in order to increase engagement.
+				</p>
+				<footer>
+					1. https://www.cloudflight.io/en/blog/pwa <br>
+					2. https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium<br>
+					3. https://www.notifyvisitors.com/blog/pwa-statistics/
+				</footer>
+
+				<div class="parallax">
+				</div>
+			</main>
+		</div> <!-- close the wrapper div -->
+	</body>
+</html>
