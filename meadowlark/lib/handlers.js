@@ -56,6 +56,16 @@ exports.vacationPhotoContestProcess = (req, res, fields, files) => {
     res.redirect(303, '/contest/vacation-photo-thank-you')
 }
 
+exports.vacationPhotoThankYou = (req, res) => {
+    res.render('contest/vacation-photo-thank-you')
+}
+
+exports.api.vacationPhotoContest = (req, res, fields, files) => {
+    console.log('field data: ', fields)
+    console.log('files: ', files)
+    res.send({ result: 'success' })
+}
+
 exports.notFound = (req, res) => res.render('404')
 
 exports.serverError = (err, req, res, next) => res.render('500')
