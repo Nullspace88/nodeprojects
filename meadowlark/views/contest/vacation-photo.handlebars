@@ -4,7 +4,8 @@
 <div id="vacationPhotoContestFormContainer">
   <form class="form-horizontal" role="form"
     enctype="multipart/form-data" method="POST"
-    action="/contest/vacation-photo/{{year}}/{{month}}">
+	action="/contest/vacation-photo/{{year}}/{{month}}"
+	id="vacationPhotoContestForm">
     <input type="hidden" name="_csrf" value="{{csrf}}">
     <div class="form-group">
       <label for="fieldName" class="col-sm-2 control-label">Name</label>
@@ -36,29 +37,25 @@
 </div>
 
 <script>
-  console.log("script run")
-  document.getElementById('vacationPhotoContestForm')
-    .addEventListener('submit', evt => {
-	console.log("before prevent default")
+  document.getElementById('vacationPhotoContestForm').addEventListener('submit', evt => {
 	evt.preventDefault()
 	const body = new FormData(evt.target)
 	const container =
-	    document.getElementById('vacationPhotoContestFormContainer')
-      const url = '/api/vacation-photo-contest/{{year}}/{{month}}'
-      console.log(url)
-      fetch(url, { method: 'post', body })
-          .then(resp => {
-              if(resp.status < 200 || resp.status >= 300)
-                  throw new Error(`Resquest failed with status ${resp.status}`)
-              return resp.json()
-	  })
-          .then(json => {
-              container.innerHTML = '<b>Thank you for submitting your photo!</b>'
-	  })
-	  .catch(err => {
-	      container.innerHTML = `<b>Were sorry, we had a problem processing ` +
-		  `your submission. Please <a href="/newsletter">try again</a>`
-	  })
-  })
+	      document.getElementById('vacationPhotoContestFormContainer')
+	const url = '/api/vacation-photo-contest/{{year}}/{{month}}'
+	fetch(url, { method: 'post', body })
+	    .then(resp => {
+		if(resp.status < 200 || resp.status >= 300)
+		    throw new Error(`Resquest failed with status ${resp.status}`)
+		return resp.json()
+	    })
+	    .then(json => {
+		container.innerHTML = '<b>Thank you for submitting your photo!</b>'
+	    })
+	    .catch(err => {
+		container.innerHTML = `<b>Were sorry, we had a problem processing ` +
+		`your submission. Please <a href="/newsletter">try again</a>`
+	    })
+    })
 </script>
 
