@@ -44,22 +44,23 @@
 	evt.preventDefault()
 	const body = new FormData(evt.target)
 	const container =
-	    document.getElementById('vacationPhotoContestFormContainer')
-      const url = '/api/vacation-photo-contest/{{year}}/{{month}}'
-      console.log(url)
-      fetch(url, { method: 'post', body })
-          .then(resp => {
-              if(resp.status < 200 || resp.status >= 300)
-                  throw new Error(`Resquest failed with status ${resp.status}`)
-              return resp.json()
-	  })
-          .then(json => {
-              container.innerHTML = '<b>Thank you for submitting your photo!</b>'
-	  })
-	  .catch(err => {
-	      container.innerHTML = `<b>Were sorry, we had a problem processing ` +
-		  `your submission. Please <a href="/newsletter">try again</a>`
-	  })
-  })
+	document.getElementById('vacationPhotoContestFormContainer')
+	const url = '/api/vacation-photo-contest/{{year}}/{{month}}'
+	console.log(url)
+	fetch(url, { method: 'post', body })
+	    .then(resp => {
+		if(resp.status < 200 || resp.status >= 300)
+		    throw new Error(`Resquest failed with status ${resp.status}`)
+		return resp.json()
+	    })
+	    .then(json => {
+		console.log("before thank you")
+		container.innerHTML = '<b>Thank you for submitting your photo!</b>'
+	    })
+	    .catch(err => {
+		container.innerHTML = `<b>Were sorry, we had a problem processing ` +
+		`your submission. Please <a href="/newsletter">try again</a>`\
+	    })
+    })
 </script>
 
