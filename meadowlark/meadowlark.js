@@ -5,7 +5,6 @@ const handlers = require('./lib/handlers')
 const bodyParser = require('body-parser')
 const path = require('path')
 const multipart = require('multiparty')
-const formidable = require('formidable')
 
 const app = express()
 
@@ -41,21 +40,10 @@ app.post('/api/newsletter-signup', handlers.api.newsletterSignup)
 app.get('/contest/vacation-photo/', handlers.vacationPhoto)
 
 app.post('/contest/vacation-photo/:year/:month', (req, res) => {
-    const forma = new formidable.IncomingForm()
-    forma.parse(req, (err, fields, files) => {
+    const form = new multiparty.Form()
+    form.parse(req, (err, fields, files) => {
 	if(err) return res.status(500).send({ error: err.message })
 	handlers.vacationPhotoContestProcess(req, res, fields, files)
-    })
-})
-
-app.get('/contest/vacation-photo-thank-you', handlers.vacationPhotoThankYou)
-
-app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
-    console.log("api route post")
-    const form = new formidable.IncomingForm()
-    form.parse(req, (err, fields, files) => {
-	if (err) return res.status(500).send({ error: err.message})
-	handlers.api.vacationPhotoContest(req, res, fields, files)
     })
 })
 
