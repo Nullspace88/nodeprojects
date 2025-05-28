@@ -6,6 +6,10 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const multipart = require('multiparty')
 const formidable = require('formidable')
+const cookieParser = require('cookie-parser')
+const { credentials } = require('./config')
+const expressSession = require('express-session')
+const flashMiddleware = require('./lib/middleware/flash')
 
 const app = express()
 
@@ -16,8 +20,21 @@ app.engine('handlebars', expressHandlebars({
 }))
 app.set('view engine', 'handlebars')
 
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+app.use(cookieParser(credentials.cookieSecret)) 
+
+// app.use(flashMiddleware)
+
+app.use(expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: credentials.cookieSecret,
+}))
 
 const port = process.env.PORT || 3000
 
@@ -58,8 +75,44 @@ app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
     })
 })	      
 
-app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
-app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+// slightly modified version of the official W3C HTML5 email regex:
+// https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address
+const VALID_EMAIL_REGEX = new RegExp('^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@' +
+				     '[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?' +
+				     '(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$')
+
+app.post('/newsletter', function(req, res){
+    const name = req.body.name || '', email = req.body.email || ''
+    // input validation
+    if(VALID_EMAIL_REGEX.test(email)) {
+	req.session.flash = {
+	    type: 'danger',
+	    intro: 'Validation error!',
+	    message: 'The email address you entered was not valid.',
+	}
+	return res.redirect(303, '/newsletter')
+    }
+    // NewsletterSignup is an example of an object you might create; since
+    // every implementation will vary, it is up to you to write these
+    // project-specific interfaces. This simply shows how a typical
+    // Express implementation might look in your project
+    new NewsletterSignup({ name, email }).save((err) => {
+	if(err) {
+	    req.session.flash = {
+		type: 'danger',
+		intro: 'Database error!',
+		message: 'There was a database error; please try again later.',
+	    }
+	    return res.redirect(303, 'newsletter/archive')
+	}
+	req.session.flash = {
+	    type: 'success',
+	    intro: 'Thank you!',
+	    message: 'You have now been signed up for the newsletter.',
+	};
+	return res.redirect(303, '/newsletter/archive')
+    })
+})
 
 
 app.use(handlers.notFound)

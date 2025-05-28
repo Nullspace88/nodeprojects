@@ -12,8 +12,10 @@
   "dependencies": {
     "body-parser": "^2.2.0",
     "bootstrap": "^5.3.6",
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
+    "express-session": "^1.18.1",
     "formidable": "^3.5.4",
     "multiparty": "^4.2.3"
   },
