@@ -72,6 +72,7 @@ app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
     const form = new formidable.IncomingForm()
     form.parse(req, (err, fields, files) => {
 	if(err) return res.status(500).send({ error: err.message })
+	console.log("files " + files)
 	handlers.api.vacationPhotoContest(req, res, fields, files)
     })
 })

@@ -1,4 +1,5 @@
-
+const pathUtils = require('path')
+const fs = require('fs')
 const fortune = require('./fortune')
 
 exports.home = (req, res) => res.render('home')
@@ -60,9 +61,41 @@ exports.vacationPhotoThankYou = (req, res) => {
     res.render('contest/vacation-photo-thank-you')
 }
 
-exports.api.vacationPhotoContest = (req, res, fields, files) => {
-    console.log('field data: ', fields)
-    console.log('files: ', files)
+// exports.api.vacationPhotoContest = (req, res, fields, files) => {
+//     console.log('field data: ', fields)
+//     console.log('files: ', files)
+//     res.send({ result: 'success' })
+// }
+
+const dataDir = pathUtils.resolve(__dirname, '..', 'data')
+const vacationPhotosDir = pathUtils.join(dataDir, 'vacation-photos')
+if(!fs.existsSync(dataDir)) fs.mkdirSync(dataDir)
+if(!fs.existsSync(vacationPhotosDir)) fs.mkdirSync(vacationPhotosDir)
+
+function saveContestEntry(contestName, email, year, month, photoPath) {
+    // TODO...this will come later
+}
+
+// we'll want these promise-based versions of fs functions later
+const { promisify } = require('util')
+const mkdir = promisify(fs.mkdir)
+const rename = promisify(fs.rename)
+
+exports.api.vacationPhotoContest = async (req, res, fields, files) => {
+    const photo = files.photo[0]
+    const dir = vacationPhotosDir + '/' + Date.now()
+    const path = dir + '/' + photo.originalFilename
+    await mkdir(dir)
+    console.log("photo " + photo.filepath)
+    console.log("path " + path)
+    fs.copyFile(photo.filepath, path, (err) => {
+	if(err) console.log(err)
+	else {
+	    
+	}
+    }) 
+    saveContestEntry('vacation-photo', fields.email,
+		     req.params.year, req.params.month, path)
     res.send({ result: 'success' })
 }
 
