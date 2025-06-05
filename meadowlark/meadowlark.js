@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 const { credentials } = require('./config')
 const expressSession = require('express-session')
 const flashMiddleware = require('./lib/middleware/flash')
+const db = require('./db')
 
 const app = express()
 
@@ -123,6 +124,8 @@ app.post('/newsletter', function(req, res){
 	return res.redirect(303, '/newsletter/archive')
     })
 })
+
+app.get('/vacations', handlers.listVacations)
 
 
 app.use(handlers.notFound)

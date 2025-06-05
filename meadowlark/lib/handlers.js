@@ -1,6 +1,7 @@
 const pathUtils = require('path')
 const fs = require('fs')
 const fortune = require('./fortune')
+const db = require('../db')
 
 exports.home = (req, res) => res.render('home')
 
@@ -91,12 +92,25 @@ exports.api.vacationPhotoContest = async (req, res, fields, files) => {
     fs.copyFile(photo.filepath, path, (err) => {
 	if(err) console.log(err)
 	else {
-	    
 	}
     }) 
     saveContestEntry('vacation-photo', fields.email,
 		     req.params.year, req.params.month, path)
     res.send({ result: 'success' })
+}
+
+exports.listVacations = async (req, res) => {
+    const vacations = await db.getVacations({ available: true })
+    const context = {
+	vacations: vacations.map(vacation => ({
+	    sku: vacation.sku,
+	    name: vacation.name,
+	    description: vacation. description,
+	    price: '$' + vacation.price.toFixed(2),
+	    inSeason: vacation.inSeason,
+	}))
+    }
+    res.render('vacations', context)
 }
 
 exports.notFound = (req, res) => res.render('404')
