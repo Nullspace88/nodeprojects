@@ -1,6 +1,7 @@
 const Vacation = require('./models/vacation')
 const mongoose = require('mongoose')
 const { credentials } = require('./config')
+const VacationInSeasonListener = require('./models/vacationInSeasonListener')
 
 const{ connectionString } = credentials.mongo
 if(!connectionString) {
@@ -78,8 +79,10 @@ Vacation.find((err, vacations) => {
 module.exports = {
     getVacations: async (options = {}) => Vacation.find(options),
     addVacationInSeasonListener: async (email, sku) => {
-s	// we'll just pretend we did this...since this is
-	// an async function, a new promise will automatically
-	// be returned that simply resolves to undefined
+	await VacationInSeasonListener.updateOne(
+	    { email },
+	    { $push: { skus: sku } },
+	    { upsert: true }
+	)
     },
 }
