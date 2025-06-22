@@ -10,7 +10,9 @@ const cookieParser = require('cookie-parser')
 const { credentials } = require('./config')
 const expressSession = require('express-session')
 const flashMiddleware = require('./lib/middleware/flash')
-const db = require('./db')
+const db = require('./db2')
+const RedisStore = require('connect-redis')(expressSession)
+const redisClient = require('redis').createClient()
 
 const app = express()
 
@@ -130,6 +132,20 @@ app.get('/vacations', handlers.listVacations)
 app.get('/notify-me-when-in-season', handlers.notifyWhenInSeasonForm)
 
 app.post('/notify-me-when-in-season', handlers.notifyWhenInSeasonProcess)
+
+app.get('/set-currency/:currency', handlers.setCurrency)
+
+
+app.use(expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: credentials.cookieSecret,
+    store: new RedisStore({
+	url: credentials.redis.url,
+	client: redisClient,
+	logErrors: true,
+    }),
+}))
 
 app.use(handlers.notFound)
 

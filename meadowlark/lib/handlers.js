@@ -1,9 +1,12 @@
 const pathUtils = require('path')
 const fs = require('fs')
 const fortune = require('./fortune')
-const db = require('../db')
+const db = require('../db2')
 
-exports.home = (req, res) => res.render('home')
+exports.home = (req, res) => {
+    console.log("home path hit")
+    res.render('home')
+}
 
 exports.about = (req, res) =>
 res.render('about', { fortune: fortune.getFortune() })
@@ -99,19 +102,21 @@ exports.api.vacationPhotoContest = async (req, res, fields, files) => {
     res.send({ result: 'success' })
 }
 
-exports.listVacations = async (req, res) => {
-    const vacations = await db.getVacations({ available: true })
-    const context = {
-	vacations: vacations.map(vacation => ({
-	    sku: vacation.sku,
-	    name: vacation.name,
-	    description: vacation. description,
-	    price: '$' + vacation.price.toFixed(2),
-	    inSeason: vacation.inSeason,
-	}))
-    }
-    res.render('vacations', context)
-}
+// old listVacations function that doesn't take currency into consideration
+// exports.listVacations = async (req, res) => {
+//     const vacations = await db.getVacations({ available: true })
+
+//     const context = {
+// 	vacations: vacations.map(vacation => ({
+// 	    sku: vacation.sku,
+// 	    name: vacation.name,
+// 	    description: vacation. description,
+// 	    price: '$' + vacation.price.toFixed(2),
+// 	    inSeason: vacation.inSeason,
+// 	}))
+//     }
+//     res.render('vacations', context)
+// }
 
 exports.notifyWhenInSeasonForm = (req, res) =>
 res.render('notify-me-when-in-season', { sku: req.query.sku })
@@ -121,6 +126,45 @@ exports.notifyWhenInSeasonProcess = async (req, res) => {
     await db.addVacationInSeasonListener(email, sku)
     return res.redirect(303, '/vacations')
 }
+
+exports.setCurrency = (req, res) => {
+    req.session.currency = req.params.currency
+    return res.redirect(303, '/vacations')
+}
+
+function convertFromUSD(value, currency) {
+    switch(currency) {
+   case 'USD': return value * 1
+    case 'GBP': return value * 0.79
+    case 'BTC': return value * 0.000078
+    default: return NaN
+    }
+}
+
+exports.listVacations = async (req, res) => {
+    const vacations = await db.getVacations()
+    const currency = req.session.currency || 'USD'
+    const context = {
+	currency: currency,
+	vacations: vacations.map(vacation => {
+	    return {
+		sku: vacation.sku,
+		name: vacation.name,
+		description: vacation.description,
+		inSeason: vacation.inSeason,
+		price: convertFromUSD(vacation.price, currency),
+		qty: vacation.qty,
+	    }
+	})
+    }
+    switch(currency){
+    case 'USD': context.currencyUSD = 'selected'; break
+    case 'GBP': context.currencyGBP = 'selected'; break
+    case 'BTC': context.currencyBTC = 'selected'; break
+    }
+    res.render('vacations', context)
+}
+
 
 exports.notFound = (req, res) => res.render('404')
 

@@ -1,0 +1,10 @@
+[0;1;32m●[0m postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (]8;;file://brendanoconnor-XPS-13-9345/usr/lib/systemd/system/postgresql.service/usr/lib/systemd/system/postgresql.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (exited)[0m since Thu 2025-06-05 19:26:20 CDT; 2min 5s ago
+ Invocation: 7ab502911aee46cfbb959ad79583b4e4
+   Main PID: 56293 (code=exited, status=0/SUCCESS)
+   Mem peak: 1.7M
+        CPU: 3ms
+
+Jun 05 19:26:20 brendanoconnor-XPS-13-9345 systemd[1]: Starting postgresql.service - PostgreSQL RDBMS...
+Jun 05 19:26:20 brendanoconnor-XPS-13-9345 systemd[1]: Finished postgresql.service - PostgreSQL RDBMS.
