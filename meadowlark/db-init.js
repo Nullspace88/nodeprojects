@@ -8,7 +8,8 @@ const createScript = `
       CREATE TABLE IF NOT EXISTS vacation_in_season_listeners (
         email varchar(200) NOT NULL,
         sku varchar(20) NOT NULL,
-        PRIMARY KEY (email, sku)
+        PRIMARY KEY (email, sku),
+        delete_requested boolean
       );
 
       CREATE TABLE IF NOT EXISTS vacations (
@@ -70,7 +71,7 @@ const seedVacations = async client => {
 	false,
 	16,
 	null,
-	0,
+	0
     ])
     // we can use the same pattern to insert other vacation data here...
 }

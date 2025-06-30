@@ -17,7 +17,9 @@ afterEach(() => {
 })
 
 test('home page links to about page', async () => {
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({
+	executablePath: '/usr/bin/chromium-browser'
+    })
     const page = await browser.newPage()
     await page.goto(`http://localhost:${port}`)
     await Promise.all([

@@ -1,6 +1,8 @@
 
 const express = require('express')
 const expressHandlebars = require('express-handlebars').engine
+const mainhandler = require('./lib/handlers/main')
+const vacationhandler = require('./lib/handlers/vacations')
 const handlers = require('./lib/handlers')
 const bodyParser = require('body-parser')
 const path = require('path')
@@ -13,6 +15,7 @@ const flashMiddleware = require('./lib/middleware/flash')
 const db = require('./db2')
 const RedisStore = require('connect-redis')(expressSession)
 const redisClient = require('redis').createClient()
+const cors = require('cors')
 
 const app = express()
 
@@ -22,6 +25,8 @@ app.engine('handlebars', expressHandlebars({
     defaultLayout: 'main',
 }))
 app.set('view engine', 'handlebars')
+
+app.use('/api', cors())
 
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
@@ -44,39 +49,39 @@ const port = process.env.PORT || 3000
 
 app.use(express.static(__dirname + '/public'))
 
-app.get('/', handlers.home)
+app.get('/', mainhandler.home)
 
-app.get('/about', handlers.about)
+app.get('/about', mainhandler.about)
 
-app.get('/headers', handlers.headers)
+app.get('/headers', mainhandler.headers)
 
-app.get('/newsletter-signup', handlers.newsletterSignup)
+app.get('/newsletter-signup', mainhandler.newsletterSignup)
 
-app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
+app.post('/newsletter-signup/process', mainhandler.newsletterSignupProcess)
 
-app.get('/newsletter-signup/thank-you', handlers.newsletterSignUpThankYou)
+app.get('/newsletter-signup/thank-you', mainhandler.newsletterSignUpThankYou)
 
-app.get('/newsletter', handlers.newsletter)
-app.post('/api/newsletter-signup', handlers.api.newsletterSignup)
+app.get('/newsletter', mainhandler.newsletter)
+app.post('/api/newsletter-signup', mainhandler.api.newsletterSignup)
 
-app.get('/contest/vacation-photo/', handlers.vacationPhoto)
+app.get('/contest/vacation-photo/', vacationhandler.vacationPhoto)
 
 app.post('/contest/vacation-photo/:year/:month', (req, res) => {
     const form = new formidable.IncomingForm()
     form.parse(req, (err, fields, files) => {
 	if(err) return res.status(500).send({ error: err.message })
-	handlers.vacationPhotoContestProcess(req, res, fields, files)
+	vacationhandler.vacationPhotoContestProcess(req, res, fields, files)
     })
 })
 
-app.get('/contest/vacation-photo-thank-you', handlers.vacationPhotoThankYou)
+app.get('/contest/vacation-photo-thank-you', vacationhandler.vacationPhotoThankYou)
 
 app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
     const form = new formidable.IncomingForm()
     form.parse(req, (err, fields, files) => {
 	if(err) return res.status(500).send({ error: err.message })
 	console.log("files " + files)
-	handlers.api.vacationPhotoContest(req, res, fields, files)
+	vacationhandler.api.vacationPhotoContest(req, res, fields, files)
     })
 })
 
@@ -127,13 +132,13 @@ app.post('/newsletter', function(req, res){
     })
 })
 
-app.get('/vacations', handlers.listVacations)
+app.get('/vacations', vacationhandler.listVacations)
 
-app.get('/notify-me-when-in-season', handlers.notifyWhenInSeasonForm)
+app.get('/notify-me-when-in-season', vacationhandler.notifyWhenInSeasonForm)
 
-app.post('/notify-me-when-in-season', handlers.notifyWhenInSeasonProcess)
+app.post('/notify-me-when-in-season', vacationhandler.notifyWhenInSeasonProcess)
 
-app.get('/set-currency/:currency', handlers.setCurrency)
+app.get('/set-currency/:currency', vacationhandler.setCurrency)
 
 
 app.use(expressSession({
@@ -147,9 +152,15 @@ app.use(expressSession({
     }),
 }))
 
-app.use(handlers.notFound)
+app.get('/api/vacations', handlers.getVacationsApi)
+app.get('/api/vacation/:sku', handlers.getVacationBySkuApi)
+app.post('/api/vacation/:sku/notify-when-in-season',
+	 handlers.addVacationInSeasonListenerApi)
+app.delete('/api/vacation/:sku', handlers.requestDeleteVacationApi)
 
-app.use(handlers.serverError)
+app.use(mainhandler.notFound)
+
+app.use(mainhandler.serverError)
 
 
 if(require.main === module) {
