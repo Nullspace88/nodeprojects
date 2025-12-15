@@ -29,7 +29,15 @@ const createScript = `
           maximum_guests integer,
           notes text,
           packages_sold integer
-         );
+        );
+
+       CREATE TABLE IF NOT EXISTS users (
+          authId varchar(200) NOT NULL,
+          name varchar(200),
+          email varchar(200),
+          role varchar(200),
+          created date
+       );
 `
 
 const getVacationCount = async client => {
@@ -73,6 +81,23 @@ const seedVacations = async client => {
 	null,
 	0
     ])
+
+    await client.query(sql, [
+	'Mystery lake cruise',
+	'mystery-lake-night-trip',
+	'Night Trip',
+	'HK300',
+	'Spend a night out on a mystery lake exploring the unknown!',
+	'Unknown, Unknown, USA',
+	99.95,
+	    `["night trip", "mystery", "fun", "unkown location"]`,
+	false,
+	true,
+	false,
+	16,
+	null,
+	0
+    ])
     // we can use the same pattern to insert other vacation data here...
 }
 
@@ -81,7 +106,7 @@ client.connect().then(async () => {
 	console.log('creating database schema')
 	await client.query(createScript)
 	const vacationCount = await getVacationCount(client) 
-	if(vacationCount === 0) {
+	if(vacationCount <= 1) {
 	    console.log('seeding vacations')
 	    await seedVacations(client)
 	}

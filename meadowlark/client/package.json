@@ -1,13 +1,15 @@
 {
   "name": "client",
   "version": "0.1.0",
-    "private": true,
-    "proxy": "http://localhost:3033",
+  "private": true,
+  "proxy": "http://localhost:3033",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^13.2.1",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",

@@ -4,7 +4,6 @@ const fortune = require('../fortune')
 const db = require('../../db2')
 
 exports.home = (req, res) => {
-    console.log("home path hit")
     res.render('home')
 }
 

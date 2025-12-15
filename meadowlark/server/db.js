@@ -2,6 +2,7 @@ const Vacation = require('./models/vacation')
 const mongoose = require('mongoose')
 const { credentials } = require('./config')
 const VacationInSeasonListener = require('./models/vacationInSeasonListener')
+const User = require('./models/user')
 
 const{ connectionString } = credentials.mongo
 if(!connectionString) {
@@ -85,4 +86,7 @@ module.exports = {
 	    { upsert: true }
 	)
     },
+    getUserById: async id => User.findById(id),
+    getUserByAuthId: async authId => User.findOne({ authId }),
+    addUser: async data => new User(data).save(),
 }

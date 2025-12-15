@@ -55,5 +55,18 @@ module.exports = {
 	    'UPDATE vacation_in_season_listeners SET delete_requested' +
 		'= true WHERE email = $1 AND sku = $2', [email, sku]
 	)
+    },
+
+    getUserByAuthId: async authId => {
+	await pool.query(
+	    'SELECT * FROM USERS WHERE authId = $1', authId
+	)
+    },
+
+    addUser: async data => {
+	await pool.query(
+	    'INSERT INTO USERS (data) VALUES ($1) ON CONFLICT DO NOTHING', data
+	)
     }
+    
 }
