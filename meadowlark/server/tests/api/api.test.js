@@ -1,7 +1,7 @@
 
 const fetch = require('node-fetch')
 
-const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://localhost:3033'
 
 const _fetch = async (method, path, body) => {
     body = typeof body === 'string' ? body : JSON.stringify(body)

@@ -4,7 +4,7 @@ const fortune = require('../fortune')
 const db = require('../../db2')
 
 exports.vacationPhoto = (req, res) => {
-    res.render('contest/vacation-photo', { year: "2022", month: "04", csrf: "csrf" })
+    res.render('contest/vacation-photo', { year: "2022", month: "04", csrf: res.locals._csrfToken })
 }
 
 exports.vacationPhotoContestProcess = (req, res, fields, files) => {
@@ -79,11 +79,12 @@ exports.api.vacationPhotoContest = async (req, res, fields, files) => {
 //     res.render('vacations', context)
 // }
 
-exports.notifyWhenInSeasonForm = (req, res) =>
-res.render('notify-me-when-in-season', { sku: req.query.sku })
+exports.notifyWhenInSeasonForm = (req, res) => {
+    res.render('notify-me-when-in-season', { sku: req.query.sku, csrf: res.locals._csrfToken })
+}
 
 exports.notifyWhenInSeasonProcess = async (req, res) => {
-    const { email, sku } = req.body
+    const { email, sku, _csrf } = req.body
     await db.addVacationInSeasonListener(email, sku)
     return res.redirect(303, '/vacations')
 }
@@ -95,7 +96,7 @@ exports.setCurrency = (req, res) => {
 
 function convertFromUSD(value, currency) {
     switch(currency) {
-   case 'USD': return value * 1
+    case 'USD': return value * 1
     case 'GBP': return value * 0.79
     case 'BTC': return value * 0.000078
     default: return NaN

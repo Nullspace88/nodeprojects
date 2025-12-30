@@ -20,7 +20,6 @@ module.exports = (app, options) => {
     return {
 	init: function() {
 	    let config = options.providers
-	    console.log("init function ran")
 	    //configure Facebook strategy
 	    passport.use(new FacebookStrategy({
 		clientID: config.facebook.appId,

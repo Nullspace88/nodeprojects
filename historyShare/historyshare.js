@@ -4,6 +4,9 @@ const expressHandlebars = require('express-handlebars').engine
 const handlers = require("./lib/handlers/main");
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session')
+const { credentials } = require('./config')
 const port = 3000;
 
 app.engine('handlebars', expressHandlebars({
@@ -11,14 +14,21 @@ app.engine('handlebars', expressHandlebars({
 }))
 app.set('view engine', 'handlebars')
 
+app.use(cookieParser(credentials.cookieSecret))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: credentials.cookieSecret,
+    cookie: { secure: false },
+}))
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTION');
+//app.use((req, res, next) => {
+//    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5000');
+//    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTION');
 
-    next();
-});
+//    next();
+//});
 
 app.get("/login", handlers.login);
 

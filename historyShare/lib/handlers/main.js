@@ -4,7 +4,12 @@ const saltRounds = 10;
 const db = require('../../db')
 
 exports.home = (req, res) => {
-    res.render("home");
+    console.log(req.session.userName)
+    if (req.session.userName) {
+	res.render("home", {username: req.session.userName})
+    } else {
+	res.render("home");
+    }
 }
 
 exports.login = (req, res) => {
@@ -20,12 +25,15 @@ exports.acceptLogin = async (req, res) => {
     bcrypt.compare(providedPass, storedHash, function(err, result) {
 	if (err) throw err
 	if (result === true) {
+	    req.session.userName = req.body.username
+	    req.session.save(err => {})
 	    console.log("Password match")
+	    res.render("home", {username: req.body.username})
 	} else {
 	    console.log("Password failed match")
+	    res.render("home");
 	}
     })
-    res.render("home");
 }
 
 exports.signup = (req, res) => {

@@ -20,7 +20,7 @@ exports.headers = (req, res) => {
 exports.newsletterSignup = (req, res) => {
     //we will learn about CSRF later...for now, we just
     //provide a dummy value
-    res.render("newsletter-signup", { csrf: 'CSRF token goes here' })
+    res.render("newsletter-signup", { csrf: res.locals._csrfToken })
 }
 
 exports.newsletterSignupProcess = (req, res) => {
@@ -38,7 +38,7 @@ exports.newsletterSignUpThankYou = (req, res) => {
 exports.newsletter = (req, res) => {
     // we will learn about CSRF later... for now, we just
     // provide a dummy value
-    res.render('newsletter', { csrf: 'CSRF token goes here' })
+    res.render('newsletter', { csrf: res.locals._csrfToken })
 }
 
 exports.api = {
@@ -52,4 +52,7 @@ exports.api = {
 
 exports.notFound = (req, res) => res.render('404')
 
-exports.serverError = (err, req, res, next) => res.render('500')
+exports.serverError = (err, req, res, next) => {
+    console.error("Unexpected server error:", err.stack)
+    res.render('500')
+}

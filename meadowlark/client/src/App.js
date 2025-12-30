@@ -14,6 +14,7 @@ function Home() {
 	<div>
 	    <h2>Welcome to Meadowlark Travel</h2>
 	    <p>Check out our "<Link to="/about">About</Link>" page!</p>
+		<p>While you're here you can also check out our "<Link to="/vacations">Vacations</Link>" page!</p>
 	</div>
     )
 }

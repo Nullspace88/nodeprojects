@@ -48,7 +48,7 @@ function Vacation({ vacation }) {
 		 <p><i>This vacation is not currently in season.</i></p>
 			<NotifyWhenInSeason sku={vacation.sku} />
 		    </div>
-		     }
+		}
 	</div>
 	)
 }
